@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-#define inicio = "HELLO DOIDO"
+#include <stdlib.h>
 
 /* Vértices de grafos são representados por objetos do tipo vertex. */
 #define vertex int
@@ -15,13 +14,6 @@ struct graph {
 /* Um Graph é um ponteiro para um graph. */
 typedef struct graph *Graph;
 
-/* A lista de adjacência de um vértice v é composta por nós do tipo node. Cada nó da lista corresponde a um arco e contém um vizinho w de v e o endereço do nó seguinte da lista. Um link é um ponteiro para um node. */
-typedef struct node *link;
-struct node { 
-   vertex w; 
-   link next; 
-};
-
 /* A função NEWnode() recebe um vértice w e o endereço next de um nó e devolve o endereço a de um novo nó tal que a->w == w e a->next == next. */
 static link NEWnode(vertex w, link next) { 
    link a = malloc( sizeof (struct node));
@@ -29,6 +21,13 @@ static link NEWnode(vertex w, link next) {
    a->next = next;     
    return a;                         
 }
+
+/* A lista de adjacência de um vértice v é composta por nós do tipo node. Cada nó da lista corresponde a um arco e contém um vizinho w de v e o endereço do nó seguinte da lista. Um link é um ponteiro para um node. */
+typedef struct node *link;
+struct node { 
+   vertex w; 
+   link next; 
+};
 
 /* REPRESENTAÇÃO POR LISTAS DE ADJACÊNCIA: A função GRAPHinit() constrói um grafo com vértices 0 1 .. V-1 e nenhum arco. */
 Graph GRAPHinit(int V) { 
@@ -45,11 +44,11 @@ Graph GRAPHinit(int V) {
 void GRAPHinsertArc(Graph G, vertex v, vertex w) { 
    for (link a = G->adj[v]; a != NULL; a = a->next) 
       if (a->w == w) return;
-   G->adj[v] = NEWnode( w, G->adj[v]);
+   G->adj[v] = NEWnode(w, G->adj[v]);
    G->A++;
 }
 
 int main(){
-	printf("%s\n", inicio);
+	printf("Hello Doido\n");
 	return 0;
 }
