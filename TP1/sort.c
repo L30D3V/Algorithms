@@ -72,6 +72,15 @@ void ordena_vetor(int size, int depth, char vetor[depth][size]){
 	return;
 }
 
+int calcula_fitas(int memory, int size){
+	int fitas;
+
+    fitas = memory * 1024;
+    fitas /= size;
+    
+    return fitas;
+}
+
 // Parâmetros:
 //     - input_file: o nome do arquivo com os registros de entrada;
 //     - output_file: o nome do arquivo com os registros de entrada ordenados;
@@ -81,34 +90,30 @@ void ordena_vetor(int size, int depth, char vetor[depth][size]){
 // de fechar todos os arquivos que você usar por aqui!!
 void external_sort(const char* input_file, const char* output_file, unsigned int memory) {
 	FILE *input;
-	FILE *output;
-	FILE *bloco_um;
-	FILE *bloco_dois;
+	FILE *bloco_um, *bloco_dois, *bloco_tres;
 
-	int size, i, j, k, total = 0;
-	int fitas = 3, result = 0;
-	int intercala = 0;
+	int size, fitas = 3, total = 0;
+	int i, j, result, intercala;
 
 	input = fopen(input_file, "r");
-	output = fopen(output_file, "w");
 	bloco_um = fopen("resultados/bloco_um.txt", "w");
 	bloco_dois = fopen("resultados/bloco_dois.txt", "w");
-
-	if (input == NULL || output == NULL){
-		printf("Erro na abertura do arquivo!\n");
+	
+	if (input == NULL){
+		printf("ERRO NA ABERTURA DO ARQUIVO!\n");
 		return;
 	}
 
-	// Leitura do tamanho da string e escrita em output 
+	//Ler tamanho da string e inicializar vetor
 	fscanf(input, "%d", &size);
-	//fprintf(output, "%d\n", size);
-	fprintf(output, "%d\n", size);
-
 	size += 2;
-	//Inicializa vetor de strings
+
 	char (*vetor)[size] = mathias_malloc(fitas * sizeof(*vetor));
 	fgets(vetor[0], size, input);
-	
+
+	//Calcula quantidade possível de linhas
+	//fitas = calcula_fitas(memory, size);
+
 	while (fgets(vetor[0], size, input) != 0){
 		for (i = 1; i < fitas; i++){
 			if (fgets(vetor[i], size, input) == 0)
@@ -120,207 +125,160 @@ void external_sort(const char* input_file, const char* output_file, unsigned int
 		//Escreve bloco ordenado
 		if (total == 0 || total%2 == 0){
 			for (j = 0; j < i; j++){
-				fprintf(output, "%s", vetor[j]);
+				fprintf(bloco_um, "%s", vetor[j]);
 			}
 		} else {
 			for (j = 0; j < i; j++){
-				fprintf(bloco_um, "%s", vetor[j]);
+				fprintf(bloco_dois, "%s", vetor[j]);
 			}
 		}
-		
 		total++;
 	}
-
-	fclose(input);
-	fclose(output);
+	
 	fclose(bloco_um);
 	fclose(bloco_dois);
 
-	// Clear-up
-	mathias_free(vetor);
-
-	for (i = 0; i < total-1; i++){
+	for (i = 0; i < total; i++){
 		char *bloco1, *bloco2;
 		bloco1 = (char*)mathias_malloc(size*sizeof(char));
 		bloco2 = (char*)mathias_malloc(size*sizeof(char));
 
+		int eof1, eof2;
+		int k;
+		
+		printf("%d\n", total);
 
-		if (i == 0 || i%2 == 0) {
-			//Abrir files
-			output = fopen(output_file, "r");
+		if (total % 2 == 0 || total == 0){
+			// Abrir arquivos
 			bloco_um = fopen("resultados/bloco_um.txt", "r");
-			bloco_dois = fopen("resultados/bloco_dois.txt", "w");
-
-			//Inicializa result
-			result = -1;
-			j = 0;
-			k = 0;
-			intercala = 0;		
-
-			//Ler tamanho das strings
-			fscanf(output, "%d", &size);
-			size += 2;
-			fgets(bloco1, size, output);
-
-			do{
-				//Ler strings para comparação
-				if (result == 1 && intercala != 1){
-					if (fgets(bloco1, size, output) == 0){
-						if (intercala == 2){
-							intercala = -1;
-						} else {
-							intercala = 1;
-						}
-					}
-				} else if (result == 0 && intercala != 2 && k != fitas){
-					if (fgets(bloco2, size, bloco_um) == 0){
-						if (intercala == 1){
-							intercala = -1;
-						} else {
-							intercala = 2;
-						}
-					}
-				} else {
-					if (fgets(bloco1, size, output) == 0)
-						intercala++;
-					if (fgets(bloco2, size, bloco_um) == 0)
-						intercala++;
-				}
-
-				if (intercala == 1){
-					fprintf(bloco_dois, "%s", bloco2);
-					result = 0;
-					k++;
-
-				} else if (intercala == 2) {
-					fprintf(bloco_dois, "%s", bloco1);
-					result = 1;
-					j++;
-				} else {
-					result = a_menor_que_b(bloco1, bloco2, size);
-				}
-				
-				if (result == 1 && intercala == 0){
-					fprintf(bloco_dois, "%s", bloco1);
-					j++;
-				} else if (result == 0 && intercala == 0){
-					fprintf(bloco_dois, "%s", bloco2);
-					k++;
-				}
-
-				if (j == fitas){
-					if (intercala == 2){
-						intercala = -1;
-					} else {
-						intercala = 1;
-					}
-				}
-				if (k == fitas){
-					if (intercala == 1){
-						intercala = -1;
-					} else {
-						intercala = 2;
-					}
-				}
-				if (k == fitas && j == fitas)
-					intercala = -1;
-
-				printf("j >>>> %d\tk >>>> %d\n", j, k);
-				printf("%d\n", intercala);
-			} while (intercala >= 0);
-		} else {
-			//Abrir files
-			output = fopen(output_file, "r");
-			bloco_um = fopen("resultados/bloco_um.txt", "w");
 			bloco_dois = fopen("resultados/bloco_dois.txt", "r");
+			bloco_tres = fopen("resultados/bloco_tres.txt", "w");
 
-			//Inicializa result
-			result = -1;
-			j = 0;
-			k = 0;
-			intercala = 0;
-			
-			//Ler tamanho das strings
-			fscanf(output, "%d", &size);
-			size += 2;
-			fgets(bloco1, size, output);
-
-			do{
+			// Inicializa controles
+			j = 0; k = 0; result = -1;
+			do {
 				//Ler strings para comparação
-				if (result == 1 && intercala != 1){
-					if (fgets(bloco1, size, output) == 0){
-						if (intercala == 2){
-							intercala = -1;
-						} else {
-							intercala = 1;
-						}
-					}
-				} else if (result == 0 && intercala != 2 && k != fitas){
-					if (fgets(bloco2, size, bloco_dois) == 0){
-						if (intercala == 1){
-							intercala = -1;
-						} else {
-							intercala = 2;
-						}
-					}
-				} else {
-					if (fgets(bloco1, size, output) == 0)
-						intercala++;
+				if (result == 1){
+					if (fgets(bloco1, size, bloco_um) == 0)
+						eof1 = 1;
+				} else if (result == 0){
 					if (fgets(bloco2, size, bloco_dois) == 0)
-						intercala++;
-				}
-
-				if (intercala == 1){
-					fprintf(bloco_um, "%s", bloco2);
-					result = 0;
-					k++;
-
-				} else if (intercala == 2) {
-					fprintf(bloco_um, "%s", bloco1);
-					result = 1;
-					j++;
+						eof2 = 1;
 				} else {
-					result = a_menor_que_b(bloco1, bloco2, size);
+					if (fgets(bloco1, size, bloco_um) == 0)
+						eof1 = 1;
+					if (fgets(bloco2, size, bloco_dois) == 0)
+						eof2 = 1;
 				}
-				
-				if (result == 1 && intercala == 0){
-					fprintf(bloco_um, "%s", bloco1);
+
+				//verifica_bloco_vazio();
+				//verifica_eof1();
+				if (eof1 == 1){
+					if (eof2 != 1){
+						do {
+							if (fgets(bloco2, size, bloco_dois) != 0){
+								fprintf(bloco_tres, "%s", bloco2);
+							}
+							else {
+								eof2 = 1;
+							} 
+						} while (eof2 != 1);
+					}
+				}
+				//verifica_eof2();
+				if (eof2 == 1){
+					if (eof1 != 1){
+						do{
+							if (fgets(bloco1, size, bloco_um) != 0){
+								fprintf(bloco_tres, "%s", bloco2);
+							}
+							else {
+								eof2 = 1;
+							} 
+						} while (eof2 != 1);
+					}
+				}
+
+				//compara();
+				result = a_menor_que_b(bloco1, bloco2, size);
+				//escreve_menor();
+				if (result == 1){
+					fprintf(bloco_tres, "%s", bloco1);
 					j++;
-				} else if (result == 0 && intercala == 0){
-					fprintf(bloco_um, "%s", bloco2);
+				} else if (result == 0){
+					fprintf(bloco_tres, "%s", bloco2);
 					k++;
 				}
 
-				if (j == fitas){
-					printf("CHEGUEI AQUI UM\n");
-					if (intercala == 2){
-						intercala = -1;
-						printf("CHEGUEI AQUI\n");
-					} else {
-						intercala = 1;
+				//verifica_final_bloco_um();
+				if (j == i*fitas){
+					//escreve_bloco_dois();
+					if (eof2 != 1){
+						do {
+							if (fgets(bloco2, size, bloco_dois) != 0){
+								fprintf(bloco_tres, "%s", bloco2);
+								k++;
+							}
+							else {
+								eof2 = 1;
+								k = i*fitas;
+							}
+						} while (k != (i*fitas));
 					}
 				}
-				if (k == fitas){
-					if (intercala == 1){
-						intercala = -1;
-					} else {
-						intercala = 2;
-					}
-				}
-				if (k == fitas && j == fitas)
-					intercala = -1;
 
-				printf("j >>>> %d\tk >>>> %d\n", j, k);
-				printf("%d\n", intercala);
-			} while (intercala >= 0);
+				//verifica_final_bloco_dois();
+				if (k == i*fitas){
+					//escreve_bloco_um();
+					if (eof1 != 1){
+						do {
+							if (fgets(bloco1, size, bloco_um) != 0){
+								fprintf(bloco_tres, "%s", bloco1);
+								j++;
+							}
+							else {
+								eof1 = 1;
+								j = i*fitas;
+							}
+						} while (j != (i*fitas));
+					}
+				}
+
+				//verifica_eof1();
+				if (eof1 == 1){
+					if (eof2 != 1){
+						do{
+							if (fgets(bloco2, size, bloco_dois) != 0){
+								fprintf(bloco_tres, "%s", bloco2);
+							}
+							else {
+								eof2 = 1;
+							} 
+						} while (eof2 != 1);
+					}
+				}
+				//verifica_eof2();
+				if (eof2 == 1){
+					if (eof1 != 1){
+						do{
+							if (fgets(bloco1, size, bloco_um) != 0){
+								fprintf(bloco_tres, "%s", bloco2);
+							}
+							else {
+								eof2 = 1;
+							} 
+						} while (eof2 != 1);
+					}
+				}
+
+				intercala = 1;
+			} while (intercala == 1);
 		}
-
-		fclose(output);
-		fclose(bloco_um);
-		fclose(bloco_dois);
-
-		mathias_free(bloco1);
-		mathias_free(bloco2);
 	}
+
+	fclose(bloco_um);
+	fclose(bloco_dois);
+	fclose(bloco_tres);
+
 	return;
 }
