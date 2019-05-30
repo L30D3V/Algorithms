@@ -6,8 +6,13 @@
 enum Tipo {EQUILATERO, ISOSCELES, ESCALENO};
 
 class Triangulo {
+private:
+    double _x;
+    double _y;
+    double _z;
 public:
-    Triangulo(double x, double y, double z);
+    Triangulo(double x, double y, double z) throw(TrianguloInvalidoException);
+    Tipo determinar_tipo();
 };
 
 #endif
