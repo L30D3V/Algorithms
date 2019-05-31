@@ -9,12 +9,6 @@ Triangulo::Triangulo(double x, double y, double z) throw(TrianguloInvalidoError)
     if (!((x > abs(y - z)) && (x < (y + z)))) {
         throw TrianguloInvalidoError();
     }
-    if (!((y > abs(x - z)) && (x < (x + z)))) {
-        throw TrianguloInvalidoError();
-    }
-    if (!((z > abs(y - x)) && (x < (y + x)))) {
-        throw TrianguloInvalidoError();
-    }
     
     _x = x;
     _y = y;
@@ -47,7 +41,3 @@ Tipo Triangulo::determinar_tipo() {
         return Tipo::ESCALENO;
     }
 }
-
-double Triangulo::getX() { return _x; }
-double Triangulo::getY() { return _y; }
-double Triangulo::getZ() { return _z; }

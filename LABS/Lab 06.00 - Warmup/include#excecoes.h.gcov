@@ -1,12 +1,11 @@
         -:    0:Source:include/excecoes.h
-        -:    0:Programs:18
-        -:    0:Source is newer than graph
+        -:    0:Programs:4
         -:    1:#ifndef PDS2_EXCECOES_H
         -:    2:#define PDS2_EXCECOES_H
         -:    3:
         -:    4:#include <stdexcept>
         -:    5:
-       54:    6:class TrianguloInvalidoError : public std::exception{
+       22:    6:class TrianguloInvalidoError : public std::exception{
         -:    7:    public:
         -:    8:        virtual const char* what() const noexcept override;
         -:    9:};

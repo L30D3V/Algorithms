@@ -1,7 +1,7 @@
         -:    0:Source:src/excecoes.cpp
-        -:    0:Programs:18
+        -:    0:Programs:4
         -:    1:#include "excecoes.h"
         -:    2:
-       29:    3:const char* TrianguloInvalidoError::what() const noexcept {
-       29:    4:    return "Triangulo inválido!";
+    #####:    3:const char* TrianguloInvalidoError::what() const noexcept {
+    #####:    4:    return "Triangulo inválido!";
         -:    5:}

@@ -20,6 +20,24 @@ TEST_CASE("Triângulo Escaleno") {
     CHECK(eq == Tipo::ESCALENO);
 }
 
+TEST_CASE("Triangulo Isóceles 2") {
+    Triangulo isoceles(2, 5, 5);
+    Tipo is = isoceles.determinar_tipo();
+    CHECK(is == Tipo::ISOSCELES);
+}
+
 TEST_CASE("Triângulo Inválido") {
     CHECK_THROWS(new Triangulo(5, -5, 5));
+}
+
+TEST_CASE("Triangulo inválido 2") { 
+    CHECK_THROWS(new Triangulo(50, 1, 1));
+}
+
+TEST_CASE("Triangulo inválido 2") { 
+    CHECK_THROWS(new Triangulo(1, 50, 1));
+}
+
+TEST_CASE("Triangulo inválido 2") { 
+    CHECK_THROWS(new Triangulo(1, 1, 50));
 }
