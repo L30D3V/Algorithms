@@ -11,8 +11,11 @@ private:
     double _y;
     double _z;
 public:
-    Triangulo(double x, double y, double z) throw(TrianguloInvalidoException);
+    Triangulo(double x, double y, double z) throw(TrianguloInvalidoError);
     Tipo determinar_tipo();
+    double getX();
+    double getY();
+    double getZ();
 };
 
 #endif

@@ -9,19 +9,17 @@ TEST_CASE("Triângulo Equilátero") {
 }
 
 TEST_CASE("Triângulo Isóceles") {
-    Triangulo isoceles(5, 5, 15);
+    Triangulo isoceles(5, 5, 7);
     Tipo eq = isoceles.determinar_tipo();
     CHECK(eq == Tipo::ISOSCELES);
 }
 
 TEST_CASE("Triângulo Escaleno") {
-    Triangulo escaleno(5, 25, 15);
+    Triangulo escaleno(5, 8, 10);
     Tipo eq = escaleno.determinar_tipo();
     CHECK(eq == Tipo::ESCALENO);
 }
 
 TEST_CASE("Triângulo Inválido") {
-    Triangulo invalido(5, -5, 5);
-    Tipo eq = invalido.determinar_tipo();
-    CHECK(eq == Tipo::EQUILATERO);
+    CHECK_THROWS(new Triangulo(5, -5, 5));
 }

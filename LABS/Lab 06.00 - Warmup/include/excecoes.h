@@ -3,7 +3,9 @@
 
 #include <stdexcept>
 
-class TrianguloInvalidoException : public std::exception {
+class TrianguloInvalidoError : public std::exception{
+    public:
+        virtual const char* what() const noexcept override;
 };
 
 #endif

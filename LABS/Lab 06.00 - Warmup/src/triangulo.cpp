@@ -1,17 +1,19 @@
+#include <iostream>
 #include "triangulo.h"
+#include "excecoes.h"
 
-Triangulo::Triangulo(double x, double y, double z) {
-    if (_x <= 0 || _y <= 0 || _z <= 0) {
-        throw TrianguloInvalidoException();
+Triangulo::Triangulo(double x, double y, double z) throw(TrianguloInvalidoError) {
+    if ((x <= 0) || (y <= 0) || (z <= 0)) {
+        throw TrianguloInvalidoError();
     }
-    if (!((_x > abs(_y - _z)) && (_x < (_y + _z)))) {
-        throw TrianguloInvalidoException();
+    if (!((x > abs(y - z)) && (x < (y + z)))) {
+        throw TrianguloInvalidoError();
     }
-    if (!((_y > abs(_x - _z)) && (_x < (_x + _z)))) {
-        throw TrianguloInvalidoException();
+    if (!((y > abs(x - z)) && (x < (x + z)))) {
+        throw TrianguloInvalidoError();
     }
-    if (!((_z > abs(_y - _x)) && (_x < (_y + _x)))) {
-        throw TrianguloInvalidoException();
+    if (!((z > abs(y - x)) && (x < (y + x)))) {
+        throw TrianguloInvalidoError();
     }
     
     _x = x;
@@ -20,11 +22,32 @@ Triangulo::Triangulo(double x, double y, double z) {
 }
 
 Tipo Triangulo::determinar_tipo() { 
-    if (_x == _y == _z) {
-        return Tipo::EQUILATERO;
-    } else if ((_x == _y != _z) || (_x == _z != _y) || (_z == _y != _x)) {
-        return Tipo::ISOSCELES;
-    } else if (_x != _y != _z) {
+    if (_x == _y) {
+        if (_x == _z) {
+            return Tipo::EQUILATERO;
+        } else {
+            return Tipo::ISOSCELES;
+        }
+    }
+    else if (_x == _z) {
+        if (_x == _y) {
+            return Tipo::EQUILATERO;
+        } else {
+            return Tipo::ISOSCELES;
+        }
+    }
+    else if (_z == _y) {
+        if (_z == _x) {
+            return Tipo::EQUILATERO;
+        } else {
+            return Tipo::ISOSCELES;
+        }
+    }
+    else {
         return Tipo::ESCALENO;
     }
 }
+
+double Triangulo::getX() { return _x; }
+double Triangulo::getY() { return _y; }
+double Triangulo::getZ() { return _z; }
