@@ -12,7 +12,7 @@ int commander(int a, std::vector<std::vector<int> > graph);
 bool swap(int a, int b, std::vector<std::vector<int> > graph);
 
 int search_younger_age(int a, std::vector<std::vector<int> > graph);
-bool verify_cycle(std::vector<std::vector<int> > graph);
+bool verify_cycle(std::vector<std::vector<int> > graph, int a, std::vector<bool> rec_stack);
 
 int main(int argc, char* argv[]) {
     int n, m, i, read_temp, x, y;
@@ -196,19 +196,66 @@ bool swap(int a, int b, std::vector<std::vector<int> > graph) {
     std::cout << "[SWAP] - START" << std::endl;
 
     bool has_edge = false;
+    int edge = -1;
+    std::vector<bool> rec_stack;
+    
+    rec_stack.resize(graph.size());
+    visited.resize(0);
+    visited.resize(graph.size());
 
     for (int i = 0; i < graph[b-1].size(); i++) {
-        if (graph[b-1][i] == a)
+        if (graph[b-1][i] == a) {
             has_edge = true;
+            edge = i;
+
+            std::cout << "[SWAP - FoundEdge] - " << a << " " << i << std::endl;
+            break;
+        }
     }
 
     if (has_edge) {
-        // TODO: creates new graph as a copy of the original
-        // TODO: remove item from graph[b-1]
-        // TODO: add edge to graph[a-1]
+        std::cout << "[SWAP - HasEdge]" << std::endl;
+        graph[b-1].erase(graph[b-1].begin() + edge);
+        graph[a-1].push_back(b);
 
-        verify_cycle(graph);
+        // Print lista de adjacência para referência visual
+        for (int i = 0; i < graph.size(); i++) {
+            std::cout << i << " - ";
+            for (int j = 0; j < graph[i].size(); j++) {
+                std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+
+        if (verify_cycle(graph, a, rec_stack)) {
+            std::cout << "[SWAP] - END on true if" << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
+
+            return true;
+        }
+        else {
+            graph[a-1].pop_back();
+            graph[b-1].push_back(a);
+
+            std::cout << "[SWAP] - Undid change" << std::endl;
+
+            // Print lista de adjacência para referência visual
+            for (int i = 0; i < graph.size(); i++) {
+                std::cout << i << " - ";
+                for (int j = 0; j < graph[i].size(); j++) {
+                    std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
+
+            std::cout << "[SWAP] - END on loop else" << std::endl;
+            std::cout << "-----------------------------------" << std::endl;
+
+            return false;
+        }
     } else {
+        std::cout << "[SWAP] - END on Else" << std::endl;
+        std::cout << "-----------------------------------" << std::endl;
         return false;
     }
 
@@ -217,6 +264,41 @@ bool swap(int a, int b, std::vector<std::vector<int> > graph) {
     std::cout << "-----------------------------------" << std::endl;
 }
 
-bool verify_cycle(std::vector<std::vector<int> > graph) {
-    return false;
+bool verify_cycle(std::vector<std::vector<int> > graph, int a, std::vector<bool> rec_stack) {
+    std::cout << "[VerifyCycle] - Started " << a << std::endl;
+
+    visited[a-1] = true;
+    rec_stack[a-1] = true;
+
+    bool result = true;
+    
+    std::cout << "[VerifyCycle] - Visited: ";
+    for (int i = 0; i < visited.size(); i++) {
+        std::cout << visited[i] << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "[VerifyCycle] - Stack: ";
+    for (int i = 0; i < rec_stack.size(); i++) {
+        std::cout << rec_stack[i] << " ";
+    }
+    std::cout << std::endl;
+
+    for (auto i : graph[a-1]) {
+        std::cout << "[VerifyCycle] - Verifying " << i << std::endl;
+        if (rec_stack[i-1]) {
+            std::cout << "[VerifyCycle] - Found cycle: " << a << " " << i << std::endl;
+            result = false;
+        }
+        if (!visited[i-1]) {
+            std::cout << "[VerifyCycle] - Call verify: " << a << " " << i << std::endl;
+
+            result = verify_cycle(graph, i, rec_stack);
+        }
+    }
+    
+    rec_stack[a-1] = false;
+    std::cout << "[VerifyCycle] - Ended " << a << std::endl;
+
+    return result;
 }
