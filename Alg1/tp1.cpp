@@ -7,9 +7,11 @@
 std::vector<bool> visited;
 std::vector<int> position_to_age;
 int younger;
+std::vector<int> speaking_order;
 
 int commander(int a, std::vector<std::vector<int> > graph);
 bool swap(int a, int b, std::vector<std::vector<int> > graph);
+void meeting(std::vector<std::vector<int> > graph, int a);
 
 int search_younger_age(int a, std::vector<std::vector<int> > graph);
 bool verify_cycle(std::vector<std::vector<int> > graph, int a, std::vector<bool> rec_stack);
@@ -67,18 +69,18 @@ int main(int argc, char* argv[]) {
     }
 
     // Print lista de adjacência para referência visual
-    for (int i = 0; i < n; i++) {
-        std::cout << i << " - ";
-        for (int j = 0; j < graph[i].size(); j++) {
-            std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
+    // for (int i = 0; i < n; i++) {
+    //     std::cout << i << " - ";
+    //     for (int j = 0; j < graph[i].size(); j++) {
+    //         std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     // Gerencia os comandos recebidos e chama a função correspondente.
     while (dataset >> command) {
         // Variáveis de controle para execução dos comandos
-        int a = 0, b = 0;
+        int a = 0, b = 0, k = 0;
         int menor_idade = -1;
 
         switch (command)
@@ -102,8 +104,8 @@ int main(int argc, char* argv[]) {
                 dataset >> a;
                 dataset >> b;
 
-                std::cout << "A - ";
-                std::cout << a << " " << b << std::endl;
+                // std::cout << "A - ";
+                // std::cout << a << " " << b << std::endl;
 
                 if (swap(a, b, graph))
                     std::cout << "S T" << std::endl;
@@ -113,7 +115,35 @@ int main(int argc, char* argv[]) {
                 break;
             case 'M':
                 // Ordem de fala na reunião.
-                std::cout << "Meeting" << std::endl;
+
+                visited.resize(0);
+                visited.resize(n);
+
+                // for (int i = 0; i < n; i++) {
+                //     std::cout << i << " - ";
+                //     for (int j = 0; j < graph[i].size(); j++) {
+                //         std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+                //     }
+                //     std::cout << std::endl;
+                // }
+
+                // std::cout << "[MEETING] - Started" << std::endl;
+
+                std::cout << "M";
+                
+                k = 0;
+                while (!visited[k] && k < n) {
+                    // std::cout << "[MEETING] - Call " << k << std::endl;
+
+                    visited[k] = true;
+                    meeting(graph, k);
+
+                    k++;
+                }
+            
+                std::cout << std::endl;
+                // std::cout << "[MEETING] - Ended" << std::endl;
+                
                 break;
 
         default:
@@ -192,8 +222,8 @@ int commander(int a, std::vector<std::vector<int> > graph) {
 }
 
 bool swap(int a, int b, std::vector<std::vector<int> > graph) {
-    std::cout << "-----------------------------------" << std::endl;
-    std::cout << "[SWAP] - START" << std::endl;
+    // std::cout << "-----------------------------------" << std::endl;
+    // std::cout << "[SWAP] - START" << std::endl;
 
     bool has_edge = false;
     int edge = -1;
@@ -208,28 +238,28 @@ bool swap(int a, int b, std::vector<std::vector<int> > graph) {
             has_edge = true;
             edge = i;
 
-            std::cout << "[SWAP - FoundEdge] - " << a << " " << i << std::endl;
+            // std::cout << "[SWAP - FoundEdge] - " << a << " " << i << std::endl;
             break;
         }
     }
 
     if (has_edge) {
-        std::cout << "[SWAP - HasEdge]" << std::endl;
+        // std::cout << "[SWAP - HasEdge]" << std::endl;
         graph[b-1].erase(graph[b-1].begin() + edge);
         graph[a-1].push_back(b);
 
         // Print lista de adjacência para referência visual
-        for (int i = 0; i < graph.size(); i++) {
-            std::cout << i << " - ";
-            for (int j = 0; j < graph[i].size(); j++) {
-                std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
+        // for (int i = 0; i < graph.size(); i++) {
+        //     std::cout << i << " - ";
+        //     for (int j = 0; j < graph[i].size(); j++) {
+        //         std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+        //     }
+        //     std::cout << std::endl;
+        // }
 
         if (verify_cycle(graph, a, rec_stack)) {
-            std::cout << "[SWAP] - END on true if" << std::endl;
-            std::cout << "-----------------------------------" << std::endl;
+            // std::cout << "[SWAP] - END on true if" << std::endl;
+            // std::cout << "-----------------------------------" << std::endl;
 
             return true;
         }
@@ -237,68 +267,87 @@ bool swap(int a, int b, std::vector<std::vector<int> > graph) {
             graph[a-1].pop_back();
             graph[b-1].push_back(a);
 
-            std::cout << "[SWAP] - Undid change" << std::endl;
+            // std::cout << "[SWAP] - Undid change" << std::endl;
 
             // Print lista de adjacência para referência visual
-            for (int i = 0; i < graph.size(); i++) {
-                std::cout << i << " - ";
-                for (int j = 0; j < graph[i].size(); j++) {
-                    std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
-                }
-                std::cout << std::endl;
-            }
+            // for (int i = 0; i < graph.size(); i++) {
+            //     std::cout << i << " - ";
+            //     for (int j = 0; j < graph[i].size(); j++) {
+            //         std::cout << std::setfill('0') << std::setw(2) << graph[i][j] << " ";
+            //     }
+            //     std::cout << std::endl;
+            // }
 
-            std::cout << "[SWAP] - END on loop else" << std::endl;
-            std::cout << "-----------------------------------" << std::endl;
+            // std::cout << "[SWAP] - END on loop else" << std::endl;
+            // std::cout << "-----------------------------------" << std::endl;
 
             return false;
         }
     } else {
-        std::cout << "[SWAP] - END on Else" << std::endl;
-        std::cout << "-----------------------------------" << std::endl;
+        // std::cout << "[SWAP] - END on Else" << std::endl;
+        // std::cout << "-----------------------------------" << std::endl;
         return false;
     }
 
 
-    std::cout << "[SWAP] - END" << std::endl;
-    std::cout << "-----------------------------------" << std::endl;
+    // std::cout << "[SWAP] - END" << std::endl;
+    // std::cout << "-----------------------------------" << std::endl;
 }
 
 bool verify_cycle(std::vector<std::vector<int> > graph, int a, std::vector<bool> rec_stack) {
-    std::cout << "[VerifyCycle] - Started " << a << std::endl;
+    // std::cout << "[VerifyCycle] - Started " << a << std::endl;
 
     visited[a-1] = true;
     rec_stack[a-1] = true;
 
     bool result = true;
     
-    std::cout << "[VerifyCycle] - Visited: ";
-    for (int i = 0; i < visited.size(); i++) {
-        std::cout << visited[i] << " ";
-    }
-    std::cout << std::endl;
+    // std::cout << "[VerifyCycle] - Visited: ";
+    // for (int i = 0; i < visited.size(); i++) {
+    //     std::cout << visited[i] << " ";
+    // }
+    // std::cout << std::endl;
 
-    std::cout << "[VerifyCycle] - Stack: ";
-    for (int i = 0; i < rec_stack.size(); i++) {
-        std::cout << rec_stack[i] << " ";
-    }
-    std::cout << std::endl;
+    // std::cout << "[VerifyCycle] - Stack: ";
+    // for (int i = 0; i < rec_stack.size(); i++) {
+    //     std::cout << rec_stack[i] << " ";
+    // }
+    // std::cout << std::endl;
 
-    for (auto i : graph[a-1]) {
-        std::cout << "[VerifyCycle] - Verifying " << i << std::endl;
-        if (rec_stack[i-1]) {
-            std::cout << "[VerifyCycle] - Found cycle: " << a << " " << i << std::endl;
+    for (int i = 0; i < graph[a-1].size(); i++) {
+        // std::cout << "[VerifyCycle] - Verifying " << i << std::endl;
+        if (rec_stack[graph[a-1][i] - 1]) {
+            // std::cout << "[VerifyCycle] - Found cycle: " << a << " " << i << std::endl;
             result = false;
         }
-        if (!visited[i-1]) {
-            std::cout << "[VerifyCycle] - Call verify: " << a << " " << i << std::endl;
+        if (!visited[graph[a-1][i] - 1]) {
+            // std::cout << "[VerifyCycle] - Call verify: " << a << " " << i << std::endl;
 
-            result = verify_cycle(graph, i, rec_stack);
+            result = verify_cycle(graph, graph[a-1][i], rec_stack);
         }
     }
     
     rec_stack[a-1] = false;
-    std::cout << "[VerifyCycle] - Ended " << a << std::endl;
+    // std::cout << "[VerifyCycle] - Ended " << a << std::endl;
 
     return result;
+}
+
+void meeting(std::vector<std::vector<int> > graph, int a) {
+    // Print visited for visual reference
+    // for (int i = 0; i < visited.size(); i++) {
+    //     std::cout << visited[i] << " ";
+    // }
+    // std::cout << std::endl;
+
+    for (int i = 0; i < graph[a].size(); i++) {
+        if(!visited[graph[a][i] - 1]) {
+            // std::cout << "[MEETING] - " << a << " calls " << graph[a][i] - 1 << std::endl;
+
+            visited[graph[a][i] - 1] = true;
+            meeting(graph, graph[a][i] - 1);
+        }
+    }
+
+    std::cout << " " << a+1;
 }
