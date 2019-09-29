@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <time.h>
 
 std::vector<bool> visited;
 std::vector<int> position_to_age;
@@ -17,6 +18,11 @@ int search_younger_age(int a, std::vector<std::vector<int> > graph);
 bool verify_cycle(std::vector<std::vector<int> > graph, int a, std::vector<bool> rec_stack);
 
 int main(int argc, char* argv[]) {
+    clock_t start, end;
+    double cpu_time_used;
+
+    start = clock();
+
     int n, m, i, read_temp, x, y;
     char command;
     std::ifstream dataset;
@@ -28,6 +34,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Dataset não informado na execução do programa.";
         std::cout << std::endl;
 
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
         return 1;
     }
 
@@ -36,6 +44,8 @@ int main(int argc, char* argv[]) {
     if (!dataset) {
         std::cout << "Dataset não encontrado." << std::endl;
 
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
         return 1;
     }
 
@@ -154,6 +164,12 @@ int main(int argc, char* argv[]) {
 
 
     dataset.close();
+    
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    std::cout << std::endl;
+    std::cout << "[TIME] - " << cpu_time_used << std::endl;
 
     return 0;
 }
