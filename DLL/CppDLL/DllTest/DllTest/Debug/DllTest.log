@@ -1,0 +1,14 @@
+﻿  pch.cpp
+  dllmain.cpp
+  MathLibrary.cpp
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.cpp(18,1): warning C4273: 'fibonacci_init': inconsistent dll linkage
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.h(22,33): message : see previous definition of 'fibonacci_init'
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.cpp(27,1): warning C4273: 'fibonacci_next': inconsistent dll linkage
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.h(28,33): message : see previous definition of 'fibonacci_next'
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.cpp(48,1): warning C4273: 'fibonacci_current': inconsistent dll linkage
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.h(31,47): message : see previous definition of 'fibonacci_current'
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.cpp(54,1): warning C4273: 'fibonacci_index': inconsistent dll linkage
+  Generating Code...
+C:\Users\leonardot.MOSTQI\source\repos\DllTest\DllTest\MathLibrary.h(34,37): message : see previous definition of 'fibonacci_index'
+     Creating library C:\Users\leonardot.MOSTQI\source\repos\DllTest\Debug\DllTest.lib and object C:\Users\leonardot.MOSTQI\source\repos\DllTest\Debug\DllTest.exp
+  DllTest.vcxproj -> C:\Users\leonardot.MOSTQI\source\repos\DllTest\Debug\DllTest.dll
