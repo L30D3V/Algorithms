@@ -5,24 +5,19 @@ namespace DLL
 {
     class Program
     {
-        [DllImport("dll/DllTest.dll")]
-        private static extern void fibonacci_init(ulong a, ulong b);
-        [DllImport("dll/DllTest.dll")]
-        private static extern bool fibonacci_next();
-        [DllImport("dll/DllTest.dll")]
-        private static extern ulong fibonacci_current();
+        [DllImport("dll/DllFromScratch.dll")]
+        private static extern void hello_world();
+        [DllImport("dll/DllFromScratch.dll")]
+        private static extern int hello_number();
+        [DllImport("dll/DllFromScratch.dll")]
+        private static extern int new_test();
 
         static void Main(string[] args)
         {
-            Console.WriteLine("---- Fibonacci Sequence ----");
-
-            fibonacci_init(1, 1);
-
-            for(int i = 0; i < 100; i++) {    
-                fibonacci_next();
-
-                Console.Write(fibonacci_current() + " ");
-            }
+            Console.WriteLine("---- PDF Management ----");
+            hello_world();
+            Console.WriteLine(hello_number());
+            Console.WriteLine(new_test());
         }
     }
 }
