@@ -13,3 +13,11 @@ my_and False _ = False
 my_and _ False = False
 my_and True True = True
 
+
+data Pessoa = Pessoa {nome::Nome, idade::Idade, id::RG}
+type Nome = String
+type Idade = Integer
+type RG = String
+
+soma_idade :: [Pessoa] -> Integer
+
