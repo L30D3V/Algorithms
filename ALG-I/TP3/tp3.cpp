@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <time.h>
 
 bool solveSudoku();
 void printSudoku(std::vector<std::vector<int> > sudoku);
@@ -12,7 +13,12 @@ std::vector<int> possibleValues;
 std::vector<std::vector<int> > sudokuGrid;
 
 int main(int argc, char* argv[]) {
+    clock_t start, end;
+    double cpu_time_used;
+
     std::ifstream dataset;
+
+    start = clock();
 
     // Verifica se o dataset foi informado como parâmetro para execução do programa.
     if (argc < 2) {
@@ -56,6 +62,11 @@ int main(int argc, char* argv[]) {
         std::cout << "sem solução" << std::endl;
 
     printSudoku(sudokuGrid);
+    
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    // std::cout << cpu_time_used << std::endl;
 
     return 0;
 }

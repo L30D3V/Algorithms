@@ -20,4 +20,3 @@ type Idade = Integer
 type RG = String
 
 soma_idade :: [Pessoa] -> Integer
-
